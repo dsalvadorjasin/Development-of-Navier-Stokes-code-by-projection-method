@@ -247,6 +247,6 @@ END SUBROUTINE write_result_ensight
    25 format('vector per node: ',A,'   ', A)
 
    45 format(/,'TIME            '      ,/,'time set: 1     '      ,/,'number of steps:'      ,i4 ,/, &
-   'filename start number:',i10/,'filename increment:'   ,i4/,'time values: ')
+   'filename start number:',i10/,'filename increment:'   ,i10/,'time values: ')
 
       end subroutine

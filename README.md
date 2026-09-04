@@ -53,7 +53,7 @@ https://www.paraview.org/download/ for ParaView
   itmax=300
   time = 0.        ! initialize time of simulation
   nstep = 20000    ! number of timesteps for the simulation
-  isto = 200       ! data stored every 'isto' steps
+  isto = 2000      ! data stored every 'isto' steps
 ```
 3. Use the **Makefile** to compile all the files and create the executable (run the command 'make' while being in the main directory of the program).
 
@@ -62,6 +62,22 @@ https://www.paraview.org/download/ for ParaView
 5. Observe the different fields (u, v, p and omega) on the domain using Paraview. Ensight6 and Ensight Gold formats are &emsp;normally supported by Paraview.
 
 6. Remove the created files thanks to the commands 'make clean' and 'make cleanall'.
+
+### Rendering a video of the velocity field (headless ParaView)
+
+`make_video.py` is a ParaView Python script that loads `EnsightOutput.case`, colours the domain by
+velocity magnitude with arrow glyphs, and writes one PNG per stored timestep. The frames are then
+assembled into an MP4 with `ffmpeg`.
+
+    sudo apt-get install gfortran paraview ffmpeg   # pvbatch is shipped with paraview
+
+    make                                            # build ./NS_lid_driven_cavity
+    echo 1 | ./NS_lid_driven_cavity                 # 1 = Upwind, 2 = Centred; writes EnsightOutput.case + *.vec/*.scl
+    pvbatch make_video.py                           # -> frames/frame_0000.png ... (one per snapshot)
+    ffmpeg -framerate 2 -i frames/frame_%04d.png -c:v libx264 -pix_fmt yuv420p velocity.mp4
+
+The number of snapshots is `nstep/isto` (see `main.f90`); the defaults `nstep = 20000`, `isto = 2000`
+give 10 frames. `pvbatch make_video.py <case-file> <frames-dir>` overrides the input/output paths.
 
 ## Contributing
 

@@ -15,7 +15,7 @@ program NS_lid_driven_cavity
     itmax=300
     time = 0.        ! initialize time of simulation
     nstep = 20000    ! number of timesteps for the simulation
-    isto = 200       ! data stored every 'isto' steps
+    isto = 2000      ! data stored every 'isto' steps
 	  
    do istep=1,nstep  ! main loop on the timesteps
 
