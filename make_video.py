@@ -1,7 +1,7 @@
 # Render the EnSight Gold output of NS_lid_driven_cavity to a video.
 # Usage (headless):  pvbatch make_video.py [EnsightOutput.case] [frames_dir]
 # Produces frames_dir/frame_####.png (one per stored timestep); assemble with
-#   ffmpeg -framerate 2 -i frames/frame_%04d.png -c:v libx264 -pix_fmt yuv420p velocity.mp4
+#   ffmpeg -framerate 10 -i frames/frame_%04d.png -c:v libx264 -pix_fmt yuv420p velocity.mp4
 import os
 import sys
 
