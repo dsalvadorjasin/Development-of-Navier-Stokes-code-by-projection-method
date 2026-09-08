@@ -2,7 +2,9 @@
 # Usage (headless):  pvbatch make_video.py [EnsightOutput.case] [frames_dir]
 # Produces frames_dir/frame_####.png (one per stored timestep); assemble with
 #   ffmpeg -framerate 10 -i frames/frame_%04d.png -c:v libx264 -pix_fmt yuv420p velocity.mp4
+import glob
 import os
+import re
 import sys
 
 from paraview.simple import (
@@ -14,6 +16,12 @@ from paraview.simple import (
 case_file = sys.argv[1] if len(sys.argv) > 1 else "EnsightOutput.case"
 out_dir = sys.argv[2] if len(sys.argv) > 2 else "frames"
 os.makedirs(out_dir, exist_ok=True)
+
+# Remove only frames this script produced, so a shorter rerun does not leave
+# stale trailing frames that ffmpeg would later append to the new video.
+for stale in glob.glob(os.path.join(out_dir, "frame_*.png")):
+    if re.fullmatch(r"frame_\d{4}\.png", os.path.basename(stale)):
+        os.remove(stale)
 
 reader = EnSightReader(CaseFileName=case_file)
 reader.PointArrays = ["velocity", "omega", "press"]
