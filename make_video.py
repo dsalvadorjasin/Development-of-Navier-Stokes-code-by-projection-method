@@ -62,7 +62,7 @@ view.CameraParallelProjection = 1
 
 scene = GetAnimationScene()
 scene.UpdateAnimationUsingDataTimeSteps()
-timesteps = list(reader.TimestepValues)
+timesteps = list(reader.TimestepValues) or [0.0]
 print("timesteps:", timesteps)
 
 # Fixed colour range (global max of |velocity|) so frames are comparable
@@ -71,7 +71,7 @@ for t in timesteps:
     reader.UpdatePipeline(t)
     vmax = max(vmax, reader.PointData["velocity"].GetRange(-1)[1])
 lut.RescaleTransferFunction(0.0, vmax)
-glyph.ScaleFactor = 0.08 / vmax
+glyph.ScaleFactor = 0.0 if vmax == 0.0 else 0.08 / vmax
 
 for i, t in enumerate(timesteps):
     scene.AnimationTime = t
