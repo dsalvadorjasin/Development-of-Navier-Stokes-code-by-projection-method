@@ -63,6 +63,22 @@ https://www.paraview.org/download/ for ParaView
 
 6. Remove the created files thanks to the commands 'make clean' and 'make cleanall'.
 
+### Rendering a video of the velocity field (headless ParaView)
+
+`make_video.py` is a ParaView Python script that loads `EnsightOutput.case`, colours the domain by
+velocity magnitude with arrow glyphs, and writes one PNG per stored timestep. The frames are then
+assembled into an MP4 with `ffmpeg`.
+
+    sudo apt-get install gfortran paraview ffmpeg   # pvbatch is shipped with paraview
+
+    make                                            # build ./NS_lid_driven_cavity
+    echo 1 | ./NS_lid_driven_cavity                 # 1 = Upwind, 2 = Centred; writes EnsightOutput.case + *.vec/*.scl
+    pvbatch make_video.py                           # -> frames/frame_0000.png ... (one per snapshot)
+    ffmpeg -framerate 10 -i frames/frame_%04d.png -c:v libx264 -pix_fmt yuv420p velocity.mp4
+
+The number of snapshots is `nstep/isto` (see `main.f90`); the defaults `nstep = 20000`, `isto = 200`
+give 100 frames. `pvbatch make_video.py <case-file> <frames-dir>` overrides the input/output paths.
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](https://github.com/DavidCico/Development-of-Navier-Stokes-code-by-projection-method/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
