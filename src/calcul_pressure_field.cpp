@@ -4,7 +4,21 @@
 
 namespace ns {
 
-void calcul_pressure_field() { not_ported("calcul_pressure_field"); }
+void calcul_pressure_field() {
+    int k = 1;
+    for (int j = 1; j <= ny; ++j) {
+        for (int i = 1; i <= nx; ++i) {
+            pre(i, j) = x1(k);
+            k = k + 1;
+        }
+    }
+
+    for (int j = 1; j <= ny; ++j) {
+        for (int i = 1; i <= nx; ++i) {
+            p(i, j) = pre(i, j);
+        }
+    }
+}
 
 }  // namespace ns
 
