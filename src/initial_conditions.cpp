@@ -4,7 +4,19 @@
 
 namespace ns {
 
-void initial_conditions() { not_ported("initial_conditions"); }
+void initial_conditions() {
+    for (int j = 0; j <= ny + 1; ++j) {
+        for (int i = 0; i <= nx + 1; ++i) {
+            u(i, j) = 0;
+            v(i, j) = 0;
+            u1(i, j) = 0;
+            v1(i, j) = 0;
+            p(i, j) = 0;
+            u_star(i, j) = 0;
+            v_star(i, j) = 0;
+        }
+    }
+}
 
 }  // namespace ns
 
