@@ -55,6 +55,8 @@ program NS_lid_driven_cavity
 
       call boundary_conditions() ! recall boundary conditions to update them
 
+      call dump_fields()         ! optional full-precision dump (env NS_DUMP_FIELDS)
+
       if (mod(istep,isto)==0) then ! write results in ensight format if isto = istep
  
          call write_result_ensight(xx,yy,uc,vc,rot,pre,nx,ny,nz,istep,isto,nstep)

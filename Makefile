@@ -28,6 +28,7 @@ OBJS =  \
        calcul_new_velocity.o \
        velocities_output.o \
        ensight_cavity.o \
+       dump_fields.o \
   
     
 
@@ -61,6 +62,8 @@ calcul_pressure_field.o : variables_module.o
 calcul_new_velocity.o : variables_module.o
 
 velocities_output.o : variables_module.o
+
+dump_fields.o : variables_module.o
 
 
 

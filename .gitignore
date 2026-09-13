@@ -1,0 +1,21 @@
+# build artefacts
+*.o
+*.mod
+NS_lid_driven_cavity
+NS_lid_driven_cavity_hybrid
+build/
+
+# simulation outputs (except the checked-in reference oracle)
+/*.case
+/*.geo
+/*.scl
+/*.vec
+/coordinates.txt
+/u_velocity.txt
+/v_velocity.txt
+/omega_boundary.txt
+/fields_*.txt
+run/
+frames/
+*.mp4
+__pycache__/
