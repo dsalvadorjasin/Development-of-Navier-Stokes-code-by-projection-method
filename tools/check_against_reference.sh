@@ -2,7 +2,7 @@
 # Run an executable for both schemes (1=Upwind, 2=Centred) in scratch
 # directories and compare every output against reference/{upwind,centred}.
 #
-# Usage: tools/check_against_reference.sh ./NS_lid_driven_cavity_cpp [compare options]
+# Usage: tools/check_against_reference.sh ./NS_lid_driven_cavity [compare options]
 set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 EXE=$(realpath "$1"); shift

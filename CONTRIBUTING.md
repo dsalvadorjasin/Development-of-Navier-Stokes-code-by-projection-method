@@ -5,6 +5,22 @@ email, or any other method with the owners of this repository before making a ch
 
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
+## Building and testing
+
+The solver is standard C++17 with no external dependencies:
+
+    make            # builds ./NS_lid_driven_cavity with g++ (-std=c++17 -O2 -Wall -Wextra)
+    make check      # runs both schemes (Upwind, Centred) and compares all outputs with reference/
+
+`make check` must pass before a pull request is opened: it compares the velocity/pressure/vorticity
+fields at several timesteps in full double precision, the Ensight Gold binaries byte for byte and the
+text outputs exactly against the outputs of the original Fortran program (stored in `reference/`).
+Changes that intentionally alter the numerical results must regenerate the reference in the same PR
+(`tools/make_reference.sh`, requires gfortran, and the equivalent change in `fortran/`) and explain why.
+The build must stay warning-free. See [PORTING.md](PORTING.md) for the translation rules that keep the
+C++ code equivalent to the Fortran reference (index ranges, double precision, operation order, output
+formats).
+
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 

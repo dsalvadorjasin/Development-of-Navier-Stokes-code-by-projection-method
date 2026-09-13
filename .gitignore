@@ -15,6 +15,7 @@ build/
 /v_velocity.txt
 /omega_boundary.txt
 /fields_*.txt
+fortran/NS_lid_driven_cavity
 run/
 frames/
 *.mp4

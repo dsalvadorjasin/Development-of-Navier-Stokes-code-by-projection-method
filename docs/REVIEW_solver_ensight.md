@@ -3,7 +3,7 @@
 Files changed: `src/solver.cpp`, `src/ensight_cavity.cpp` (bodies of the stubs only; the
 `extern "C"` hybrid wrappers were left untouched, see section D). Base branch:
 `devin/cpp-port-skeleton`. Toolchain used: g++ 11.4.0, gfortran 11.4.0 (Ubuntu 22.04),
-flags from `cpp.mk` (`-std=c++17 -O2 -Wall -Wextra` / `-fdefault-real-8 -O3`).
+flags from `Makefile` (`-std=c++17 -O2 -Wall -Wextra` / `-fdefault-real-8 -O3`).
 
 All line numbers below refer to the files as committed on `devin/port-solver-ensight`.
 
@@ -239,7 +239,7 @@ are kept. The `.case` file is rewritten identically at every `isto` step, as in 
 
 ## C. Checks run (all on this branch, from a clean `build/`)
 
-1. `make -f cpp.mk clean && make -f cpp.mk check-hybrid PORTED="solver"`
+1. `make clean && make check-hybrid PORTED="solver"`
    ```
    == upwind (.../build/run_upwind)
    all files match the reference
@@ -247,23 +247,23 @@ are kept. The `.case` file is rewritten identically at every `isto` step, as in 
    all files match the reference
    ```
    exit 0.
-2. `make -f cpp.mk clean && make -f cpp.mk check-hybrid PORTED="ensight_cavity"` - same two
+2. `make clean && make check-hybrid PORTED="ensight_cavity"` - same two
    `all files match the reference` lines, exit 0.
-3. `make -f cpp.mk clean && make -f cpp.mk check-hybrid PORTED="solver ensight_cavity"` - same
+3. `make clean && make check-hybrid PORTED="solver ensight_cavity"` - same
    two `all files match the reference` lines, exit 0. Additionally
    `cmp build/run_upwind/EnsightOutput.geo reference/upwind/EnsightOutput.geo` and
    `cmp build/run_upwind/velocity000200.vec reference/upwind/velocity000200.vec` are silent.
 4. Bounds-checked build, one scheme:
-   `make -f cpp.mk clean && make -f cpp.mk hybrid PORTED="solver ensight_cavity" CXXFLAGS="-std=c++17 -O2 -Wall -Wextra -DNS_BOUNDS_CHECK"`,
+   `make clean && make hybrid PORTED="solver ensight_cavity" CXXFLAGS="-std=c++17 -O2 -Wall -Wextra -DNS_BOUNDS_CHECK"`,
    then `cd build/run_bc && echo 1 | NS_DUMP_FIELDS=1 ../../NS_lid_driven_cavity_hybrid`
    -> exit 0, empty stderr (no `array bounds error`), 20000 `Nombre` lines;
    `python3 tools/compare_reference.py build/run_bc reference/upwind` -> `all files match the
    reference`, exit 0.
 5. `iccg2_iterations.txt` of both reference schemes contains only the values 10 (2 steps) and
    11 (19998 steps); the C++ runs reproduce them exactly (checked by 1-4, exact text compare).
-6. `make -f cpp.mk cpp` (pure C++ executable, remaining units still stubs) compiles both files
+6. `make cpp` (pure C++ executable, remaining units still stubs) compiles both files
    with `-Wall -Wextra` without warnings.
-7. No file under `reference/`, `tools/`, `cpp.mk`, `src/variables.*`, `src/routines.hpp` was
+7. No file under `reference/`, `tools/`, `Makefile`, `src/variables.*`, `src/routines.hpp` was
    modified; no tolerance changed.
 
 ---
@@ -304,4 +304,4 @@ are kept. The `.case` file is rewritten identically at every `isto` step, as in 
    The Ensight header says `C Binary`, so this matches the file's declared convention.
 9. **Local variable `nu` in `ICCG2`** shadows the global `ns::nu` (viscosity) inside the function
    only, same as the Fortran local shadows the module variable. No `-Wshadow` warning is enabled
-   in `cpp.mk`.
+   in `Makefile`.
