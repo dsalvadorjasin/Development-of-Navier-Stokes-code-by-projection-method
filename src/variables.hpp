@@ -6,7 +6,7 @@
 // in both builds:
 //   * pure C++ build   : storage owned by variables.cpp
 //   * hybrid build     : views over the gfortran module storage
-//                        (-DNS_HYBRID, see Makefile.cpp / variables.cpp)
+//                        (-DNS_HYBRID, see cpp.mk / variables.cpp)
 //
 // Fortran declared xx, yy as bare `real`; the Makefile compiles with
 // -fdefault-real-8 so they are double precision too.

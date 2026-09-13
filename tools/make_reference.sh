@@ -2,9 +2,10 @@
 # Build the original Fortran solver and (re)generate the reference oracle used
 # to validate the C++ port:  reference/upwind/  and  reference/centred/
 #
-# Usage:  tools/make_reference.sh            (run from the repo root)
+# Usage:  tools/make_reference.sh [output-dir]     (default: <repo>/reference)
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+DEST=${1:-$ROOT/reference}
 FORTRAN_DIR="$ROOT/fortran"
 [ -d "$FORTRAN_DIR" ] || FORTRAN_DIR="$ROOT"   # Fortran sources still in the root during the port
 
@@ -13,7 +14,7 @@ EXE="$FORTRAN_DIR/NS_lid_driven_cavity"
 
 for scheme in 1:upwind 2:centred; do
   Q=${scheme%%:*}; name=${scheme##*:}
-  out="$ROOT/reference/$name"
+  out="$DEST/$name"
   rm -rf "$out"; mkdir -p "$out"
   ( cd "$out" && echo "$Q" | NS_DUMP_FIELDS=1 "$EXE" > stdout.txt )
   # keep the oracle small: only a few snapshots (first steps, some middle, last)
@@ -23,5 +24,5 @@ for scheme in 1:upwind 2:centred; do
   # stdout: keep only the ICCG2 iteration counts (the 'time =' lines are noise)
   grep -E 'Nombre|non convergence' "$out/stdout.txt" | awk '{print $NF}' > "$out/iccg2_iterations.txt"
   rm "$out/stdout.txt"
-  echo "reference/$name: $(ls "$out" | wc -l) files"
+  echo "$out: $(ls "$out" | wc -l) files"
 done

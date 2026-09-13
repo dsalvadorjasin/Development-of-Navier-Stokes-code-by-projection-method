@@ -1,16 +1,16 @@
 # C++ build of the lid-driven cavity solver (port of the Fortran code).
 #
-#   make -f Makefile.cpp                 -> ./NS_lid_driven_cavity_cpp   (pure C++)
-#   make -f Makefile.cpp hybrid PORTED="timestep boundary_conditions"
+#   make -f cpp.mk                 -> ./NS_lid_driven_cavity_cpp   (pure C++)
+#   make -f cpp.mk hybrid PORTED="timestep boundary_conditions"
 #                                        -> ./NS_lid_driven_cavity_hybrid
 #      Fortran program in which ONLY the listed units are replaced by their
 #      C++ port (src/<unit>.cpp); all other units stay Fortran.  Used to
 #      validate each ported unit in isolation against the reference oracle:
 #          echo 1 | NS_DUMP_FIELDS=1 ./NS_lid_driven_cavity_hybrid
 #          tools/compare_reference.py . reference/upwind
-#   make -f Makefile.cpp check-hybrid PORTED="timestep"
+#   make -f cpp.mk check-hybrid PORTED="timestep"
 #      builds the hybrid and runs both schemes against reference/{upwind,centred}
-#   make -f Makefile.cpp check          -> same for the pure C++ executable
+#   make -f cpp.mk check          -> same for the pure C++ executable
 #
 # Unit names are the Fortran file stems: reading_data mesh_creation
 # initial_conditions boundary_conditions timestep discretisation_upwind
