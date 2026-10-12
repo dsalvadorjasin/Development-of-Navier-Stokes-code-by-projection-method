@@ -57,6 +57,8 @@ public:
         rec.resize(reclength, 0);
         std::ofstream f(filename, std::ios::binary | std::ios::trunc);
         f.write(reinterpret_cast<const char*>(rec.data()), rec.size());
+        f.close();
+        if (!f) io_fail(filename.c_str());
     }
 
 private:
@@ -187,7 +189,8 @@ void EnsightCase(int nbVar, const std::vector<std::string>& VarName, const std::
 
     nfile = nstep / isto;
 
-    std::ofstream f(ftrim(GeoName) + ".case", std::ios::trunc);
+    const std::string case_name = ftrim(GeoName) + ".case";
+    std::ofstream f(case_name, std::ios::trunc);
 
     // 10 format('FORMAT',/,'type: ensight gold',//,'GEOMETRY',/,'model:<TAB>',A,//,'VARIABLE')
     f << "FORMAT\n"
@@ -226,6 +229,8 @@ void EnsightCase(int nbVar, const std::vector<std::string>& VarName, const std::
         // write(FileUnit,'(i5)') (j*isto,j=1,nfile)   -> one value per record
         for (j = 1; j <= nfile; ++j) f << fint(5, j * isto) << "\n";
     }
+    f.close();
+    if (!f) io_fail(case_name.c_str());
 }
 
 //-------------------------------------------------!

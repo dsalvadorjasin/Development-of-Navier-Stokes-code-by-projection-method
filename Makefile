@@ -36,7 +36,7 @@ HYB_CPP_OBJS = $(addprefix $(BUILD_DIR)/hybrid/,$(addsuffix .o,$(COMMON) $(PORTE
 FORTRAN_UNITS = $(filter-out $(PORTED),$(UNITS))
 HYB_F_OBJS  = $(addprefix $(BUILD_DIR)/hybrid/f_,$(addsuffix .o,variables_module main $(FORTRAN_UNITS)))
 
-.PHONY: all cpp hybrid check check-hybrid clean cleanall
+.PHONY: all cpp hybrid check check-hybrid clean cleanall FORCE
 
 all: cpp
 cpp: $(EXE)
@@ -50,8 +50,16 @@ $(BUILD_DIR)/cpp/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/*.hpp | $(BUILD_DIR)/cpp
 # ---- hybrid: Fortran program + selected C++ units ------------------------
 hybrid: $(HYBRID)
 
-$(HYBRID): $(HYB_F_OBJS) $(HYB_CPP_OBJS)
-	$(CXX) $(CXXFLAGS) $^ -lgfortran -o $@
+# The stamp records the PORTED selection of the last hybrid link and is only
+# rewritten when that selection changes, which forces a relink (timestamps
+# alone cannot tell that a different set of units was requested).
+HYB_STAMP = $(BUILD_DIR)/hybrid/ported.stamp
+
+$(HYB_STAMP): FORCE | $(BUILD_DIR)/hybrid
+	@echo '$(sort $(PORTED))' | cmp -s - $@ || echo '$(sort $(PORTED))' > $@
+
+$(HYBRID): $(HYB_F_OBJS) $(HYB_CPP_OBJS) $(HYB_STAMP)
+	$(CXX) $(CXXFLAGS) $(filter %.o,$^) -lgfortran -o $@
 
 $(BUILD_DIR)/hybrid/%.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/*.hpp | $(BUILD_DIR)/hybrid
 	$(CXX) $(CXXFLAGS) -DNS_HYBRID -c $< -o $@
@@ -79,3 +87,5 @@ clean:
 # also remove the simulation outputs written in the current directory
 cleanall: clean
 	rm -f *.case *.geo *.vec *.scl coordinates.txt u_velocity.txt v_velocity.txt omega_boundary.txt fields_*.txt
+
+FORCE:

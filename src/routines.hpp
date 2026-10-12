@@ -37,6 +37,10 @@ void write_result_ensight(FArray1<double>& xEnsight, FArray1<double>& yEnsight,
                           int nstep);                 // ensight_cavity.f90
 void dump_fields();                                   // dump_fields.f90 (validation aid)
 
+// Reports a failed open/write/close of an output file and exits with status 2,
+// like a gfortran I/O runtime error (the Fortran has no iostat= checks).
+[[noreturn]] void io_fail(const char* filename);
+
 // Called by the stubs of routines that have not been ported yet.
 [[noreturn]] void not_ported(const char* routine);
 

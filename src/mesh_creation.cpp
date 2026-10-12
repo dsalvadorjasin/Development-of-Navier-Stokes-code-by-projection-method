@@ -25,6 +25,8 @@ void mesh_creation() {
                    << std::setw(6) << yy(j) << '\n';
         }
     }
+    output.close();
+    if (!output) io_fail("coordinates.txt");
 }
 
 }  // namespace ns
