@@ -305,3 +305,18 @@ are kept. The `.case` file is rewritten identically at every `isto` step, as in 
 9. **Local variable `nu` in `ICCG2`** shadows the global `ns::nu` (viscosity) inside the function
    only, same as the Fortran local shadows the module variable. No `-Wshadow` warning is enabled
    in `Makefile`.
+
+## E. Reviewer decisions (Ensight writer)
+
+Signed off by @dsalvadorjasin:
+
+* **D.5** keep the C++ behaviour: `.vec`/`.scl` files are always truncated on open (the Fortran
+  keeps trailing bytes of a longer pre-existing file because `WriteEnsightVar` opens without
+  `status='replace'`).
+* **D.6** accepted: the NUL-padding path is unreachable, because for any grid the record payload
+  equals `recl` by construction (F 126 / F 182 count exactly the items written).
+* **D.8** accepted: native little-endian int32 / IEEE binary32, same as gfortran on x86-64.
+* **Output errors** accepted: a failed open/write/close of any output file now calls `io_fail()`
+  (`src/support.cpp`), which names the file and exits with status 2 like a gfortran I/O runtime
+  error. This added a few lines to `src/ensight_cavity.cpp` after this dossier was written, so
+  the C++ line numbers quoted above for that file may be off by a few lines.
