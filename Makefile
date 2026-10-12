@@ -13,6 +13,9 @@
 #          listed units are replaced by their C++ port (src/<unit>.cpp)
 #   make check-hybrid PORTED="timestep"
 #       -> builds the hybrid and compares both schemes with reference/
+#   make check-variants
+#       -> rebuilds the Fortran and the C++ with a changed parameter
+#          (Re=1000, 21x21 grid) and compares both schemes run against run
 # Unit names are the source file stems (reading_data ... ensight_cavity).
 
 CXX      = g++
@@ -36,7 +39,7 @@ HYB_CPP_OBJS = $(addprefix $(BUILD_DIR)/hybrid/,$(addsuffix .o,$(COMMON) $(PORTE
 FORTRAN_UNITS = $(filter-out $(PORTED),$(UNITS))
 HYB_F_OBJS  = $(addprefix $(BUILD_DIR)/hybrid/f_,$(addsuffix .o,variables_module main $(FORTRAN_UNITS)))
 
-.PHONY: all cpp hybrid check check-hybrid clean cleanall FORCE
+.PHONY: all cpp hybrid check check-hybrid check-variants clean cleanall FORCE
 
 all: cpp
 cpp: $(EXE)
@@ -80,6 +83,9 @@ check: $(EXE)
 
 check-hybrid: $(HYBRID)
 	tools/check_against_reference.sh ./$(HYBRID)
+
+check-variants:
+	CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" tools/check_variants.sh
 
 clean:
 	rm -rf $(BUILD_DIR) $(EXE) $(HYBRID)

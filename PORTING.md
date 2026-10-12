@@ -41,6 +41,21 @@ Whole-program check of the pure C++ executable (once every unit is ported):
 
     make check
 
+The reference only covers the default parameters (Re=100, 11x11 grid). To
+check other configurations, `make check-variants` (`tools/check_variants.sh`,
+needs gfortran) copies `fortran/` and `src/` to `build/variants/<name>/`,
+changes one parameter in both (`re1000`: `nu = 1e-03`; `grid21`:
+`nx = ny = 21`), builds both, runs both schemes and compares every output of
+the C++ run with the Fortran run with zero tolerance (all 100 Ensight steps and
+all field dumps). New variants are one line in the `VARIANTS` list of the script.
+
+Note: `u_velocity.txt`, `v_velocity.txt` and `omega_boundary.txt` contain a
+title line followed by `*` on every line, because the original Fortran writes
+the values with the format `F1.5`, which is too narrow for any number. The C++
+reproduces this, so the exact-text match of these three files carries no
+numerical information; the same values are checked through `u`, `v` and `rot`
+in the field dumps.
+
 ## Translation rules
 
 * **Arrays keep their Fortran index ranges.** Use the `FArray1`/`FArray2`

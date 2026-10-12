@@ -74,6 +74,8 @@ values (u, v, p, u*, v*, omega, divergence at several timesteps, full double pre
 binary files byte for byte and the text outputs exactly. See [PORTING.md](PORTING.md) for the details,
 how to regenerate the reference (`tools/make_reference.sh`, needs gfortran) and how to validate a single
 routine with the hybrid Fortran/C++ build.
+`make check-variants` (needs gfortran) rebuilds both programs with Re=1000 and with a 21x21 grid and
+compares the C++ run with the Fortran run for both schemes, with zero tolerance.
 
 ### Rendering a video of the velocity field (headless ParaView)
 
